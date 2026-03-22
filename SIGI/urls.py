@@ -22,8 +22,8 @@ urlpatterns = [
     path('__reload__/', include('django_browser_reload.urls')),
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('categoria/', views.categoria, name='categoria'),
-    path('categoria/crear/', views.crear_categoria, name='crear_categoria'),
-    path('producto/', views.producto, name='producto'),
-    path('producto/crear/', views.crear_producto, name='crear_producto'),
+    path('category/', views.category, name='category'),
+    path('category/add/', views.add_category, name='add_category'),
+    path('product/', views.product, name='product'),
+    path('product/add/', views.add_product, name='add_product'),
 ]

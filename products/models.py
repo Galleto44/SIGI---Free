@@ -1,17 +1,17 @@
 from django.db import models
 
 # Create your models here.
-class Categoria(models.Model):
-    nombre = models.CharField(max_length=100)
+class Categories(models.Model):
+    name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.nombre
+        return self.name
 
 
-class Producto(models.Model):
-    nombre = models.CharField(max_length=150)
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+class Products(models.Model):
+    name = models.CharField(max_length=150)
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE)
     stock = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.nombre
+        return self.name

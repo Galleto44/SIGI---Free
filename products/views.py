@@ -1,43 +1,43 @@
 from django.shortcuts import render, redirect
-from .models import Categoria, Producto
+from .models import Categories, Products
 
 # Create your views here.
 def home(request):
-    productos = Producto.objects.all()
-    return render(request, 'home.html', {'productos': productos})
+    products = Products.objects.all()
+    return render(request, 'home.html', {'products': products})
 
-def categoria(request):
-    return render(request, 'categoria.html')
+def category(request):
+    return render(request, 'category.html')
 
-def producto(request):
-    categorias = Categoria.objects.all()
-    return render(request, 'producto.html', {'categorias': categorias})
+def product(request):
+    categories = Categories.objects.all()
+    return render(request, 'product.html', {'categories': categories})
 
-def crear_producto(request):
-    categorias = Categoria.objects.all()
+def add_product(request):
+    categories = Categories.objects.all()
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        categoria_id = request.POST.get('categoria')
+        name = request.POST.get('name')
+        category_id = request.POST.get('category')
         stock = request.POST.get('stock')
 
-        categoria = Categoria.objects.get(id=categoria_id)
+        category_id = Categories.objects.get(id=category_id)
 
-        Producto.objects.create(
-            nombre=nombre,
-            categoria=categoria,
+        Products.objects.create(
+            name=name,
+            category=category_id,
             stock=stock
         )
 
         return redirect('home')
 
-    return render(request, 'producto.html', {
-        'categorias': categorias
+    return render(request, 'product.html', {
+        'categories': categories
     })
 
-def crear_categoria(request):
+def add_category(request):
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        Categoria.objects.create(nombre=nombre)
+        name = request.POST.get('name')
+        Categories.objects.create(name=name)
         return redirect('home')
 
-    return render(request, 'categoria.html')
+    return render(request, 'categoriy.html')
