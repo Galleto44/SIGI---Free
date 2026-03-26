@@ -1,14 +1,22 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
     <title>{% block title %}SIGI{% endblock %}</title>
 </head>
-<body class="bg-gradient-to-br from-pink-200 font-sans via-purple-200 to-pink-100 min-h-screen flex flex-col items-center justify-center">
-    {% block content %}
-    {% endblock %}
+<body class="font-sans bg-gray-100 min-h-screen">
+    <div class="flex">
+
+        {% include "sidebar.html" %}
+
+        <main class="flex-1 p-10">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+    </div>
 </body>
 </html>
