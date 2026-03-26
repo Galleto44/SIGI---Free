@@ -7,7 +7,8 @@ def home(request):
     return render(request, 'home.html', {'products': products})
 
 def category(request):
-    return render(request, 'category.html')
+    categories = Categories.objects.all()
+    return render(request, 'category.html', {'categories': categories})
 
 def product(request):
     categories = Categories.objects.all()

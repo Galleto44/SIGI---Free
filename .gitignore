@@ -3,3 +3,9 @@ venv/
 __pycache__/
 *.pyc
 db.sqlite3
+
+# node
+
+node_modules/
+theme/node_modules
+theme/static_src/node_modules
