@@ -1,44 +1,45 @@
 from django.shortcuts import render, redirect
-from .models import Categories, Products
+from .models import Category, Product
 
 # Create your views here.
 def home(request):
-    products = Products.objects.all()
+    products = Product.objects.all()
     return render(request, 'home.html', {'products': products})
 
 def category(request):
-    categories = Categories.objects.all()
-    return render(request, 'category.html', {'categories': categories})
+    if request.method == 'POST':
+        name = request.POST.get('name')
+
+        if name and not Category.objects.filter(name__iexact=name).exists():
+            Category.objects.create(name=name)
+
+        return redirect('category')
+
+    categories = Category.objects.all()
+    return render(request, 'category.html', {
+        'categories': categories
+    })
 
 def product(request):
-    categories = Categories.objects.all()
-    return render(request, 'product.html', {'categories': categories})
-
-def add_product(request):
-    categories = Categories.objects.all()
     if request.method == 'POST':
         name = request.POST.get('name')
         category_id = request.POST.get('category')
         stock = request.POST.get('stock')
 
-        category_id = Categories.objects.get(id=category_id)
+        if name and category_id:
+            category = Category.objects.get(id=category_id)
+            Product.objects.create(
+                name=name,
+                category=category,
+                stock=stock or 0
+            )
 
-        Products.objects.create(
-            name=name,
-            category=category_id,
-            stock=stock
-        )
+        return redirect('product')
 
-        return redirect('home')
+    products = Product.objects.select_related('category').all()
+    categories = Category.objects.all()
 
     return render(request, 'product.html', {
+        'products': products,
         'categories': categories
     })
-
-def add_category(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        Categories.objects.create(name=name)
-        return redirect('home')
-
-    return render(request, 'categoriy.html')

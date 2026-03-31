@@ -1,41 +1,75 @@
 {% extends "base.html" %}
 
-{% block title %}Categoría{% endblock %}
-
 {% block content %}
 
-<div class="flex flex-col items-center gap-6">
-    
-    <div class="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl w-full max-w-md">
+<div class="max-w-5xl mx-auto">
 
-        <h2 class="text-2xl font-semibold text-purple-700 mb-6 text-center">
-            Registrar Categoría
-        </h2>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold">Categorías</h1>
 
-        <form method="POST" class="space-y-5" action="{% url 'add_category' %}">
-            {% csrf_token %}
-
-            <div>
-                <label class="block text-gray-700 mb-2">Nombre</label>
-                <input type="text" name="name"
-                       class="w-full px-4 py-2 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                       placeholder="Ej: Peluchitos" required>
-            </div>
-
-            <button type="submit"
-                class="w-full bg-purple-400 hover:bg-purple-500 text-white font-semibold py-3 rounded-xl transition transform hover:scale-105">
-                Guardar Categoría
-            </button>
-
-        </form>
+        <button class="btn btn-sm bg-black text-white hover:bg-gray-800"
+                onclick="document.getElementById('modal-category').showModal()">
+            + Nueva categoría
+        </button>
     </div>
 
-    <a href="{% url 'home' %}">
-            <button class="bg-pink-400 hover:bg-pink-500 text-white text-lg font-semibold px-8 py-4 rounded-2xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl">
-                volver
-            </button>
-        </a>
+    <!-- Tabla -->
+    <div class="bg-base-100 border border-base-300 rounded-xl shadow-sm overflow-hidden">
+        <table class="table w-full">
+            <thead class="bg-base-200">
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr class="hover">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.description }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="text-center text-base-content/60 py-6">
+                        No hay categorías registradas
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
 
 </div>
+
+<dialog id="modal-category" class="modal">
+    <div class="modal-box">
+
+        <h3 class="font-bold text-lg mb-4">Nueva categoría</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="name"
+                   placeholder="Nombre de la categoría"
+                   class="input input-bordered w-full mb-4"
+                   required>
+
+            <div class="flex justify-end gap-2">
+                <button type="button" class="btn"
+                        onclick="document.getElementById('modal-category').close()">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="btn bg-black text-white">
+                    Guardar
+                </button>
+            </div>
+        </form>
+
+    </div>
+</dialog>
 
 {% endblock %}
