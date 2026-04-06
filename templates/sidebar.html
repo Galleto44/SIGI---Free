@@ -10,30 +10,39 @@
         <ul class="menu w-full">
             <li class="py-1">
                 <a  href="{% url 'home' %}"
-                    class="
-                    {% if request.path == '/' %}
+                class="
+                w-full px-4 py-2 rounded-lg transition
+                {% if request.path == '/' %}
+                bg-black text-white
+                {% endif %}">
+                <i data-lucide="house" class="w-4 h-4"></i>
+                Inicio
+            </a>
+        </li>
+        <li>
+            <details {% if 'product' in request.path or 'category' in request.path %}open{% endif %}>
+                <summary class="w-full px-4 py-2 rounded-lg transition">
+                    <i data-lucide="package-open" class="w-4 h-4"></i>
+                    Inventario
+                </summary>
+                <ul>
+                    <li class="py-1">
+                        <a href="{% url 'category' %}" class="
+                        w-full px-4 py-2 rounded-lg transition
+                        {% if 'category' in request.path %}
                         bg-black text-white
-                    {% endif %}">
-                    Inicio
-                </a>
-            </li>
-            <li>
-                <details {% if 'product' in request.path or 'category' in request.path %}open{% endif %}>
-                    <summary class="w-full px-4 py-2 cursor-pointer">Inventario</summary>
-                    <ul>
-                        <li class="py-1">
-                            <a href="{% url 'category' %}" class="
-                                {% if 'category' in request.path %}
-                                    bg-black text-white
-                                {% endif %}">
-                                Categorías
-                            </a>
-                        </li class="py-1">
-                        <li>
-                            <a href="{% url 'product' %}" class="
-                                {% if 'product' in request.path %}
-                                    bg-black text-white
-                                {% endif %}">
+                        {% endif %}">
+                            <i data-lucide="layers" class="w-4 h-4"></i>
+                            Categorías
+                        </a>
+                    </li class="py-1">
+                    <li>
+                        <a href="{% url 'product' %}" class="
+                        w-full px-4 py-2 rounded-lg transition
+                        {% if 'product' in request.path %}
+                        bg-black text-white
+                        {% endif %}">
+                            <i data-lucide="box" class="w-4 h-4"></i>
                             Productos
                         </a></li>
                     </ul>
@@ -41,6 +50,7 @@
             </li>
             <li class="py-1">
                 <a class="w-full px-4 py-2 rounded-lg transition">
+                    <i data-lucide="receipt" class="w-4 h-4"></i>
                     Ventas
                 </a>
             </li>

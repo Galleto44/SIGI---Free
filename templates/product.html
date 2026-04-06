@@ -5,96 +5,151 @@
 <div class="max-w-6xl mx-auto">
 
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold">Productos</h1>
+        <div class="flex items-center gap-2">
+            <i data-lucide="box" class="w-6 h-6 drop-shadow-lg"></i>
+            <h1 class="text-2xl font-semibold tracking-tight drop-shadow-lg">Productos</h1>
+        </div>
 
-        <button class="btn btn-sm bg-black text-white hover:bg-gray-800"
+        <button class="btn btn-sm bg-black text-white hover:bg-gray-800 flex items-center gap-2"
                 onclick="document.getElementById('modal-product').showModal()">
-            + Nuevo producto
+            
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Nuevo producto
         </button>
     </div>
 
     <div class="bg-base-100 border border-base-300 rounded-xl shadow-sm overflow-hidden">
-        <table class="table w-full">
+    <table class="table w-full text-sm">
 
-            <thead class="bg-base-200">
-                <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Stock</th>
-                </tr>
-            </thead>
+        <thead class="bg-base-200">
+            <tr>
+                <th class="w-12">#</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th class="text-center">Descripción</th>
+                <th class="text-center">Precio</th>
+                <th class="text-center">Stock</th>
+                <th class="w-32 text-center">Acciones</th>
+            </tr>
+        </thead>
 
-            <tbody>
-                {% for product in products %}
-                <tr class="hover">
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.category.name }}</td>
-                    <td>{{ product.stock }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center text-base-content/60 py-6">
-                        No hay productos registrados
+        <tbody>
+            {% for product in products %}
+            <tr class="hover">
+                <td>{{ forloop.counter }}</td>
+                <td class="font-medium">{{ product.name }}</td>
+                <td class="text-base-content/70">{{ product.category.name }}</td>
+                <td class="text-center">
+                    {% if product.description %}
+                        {{ product.description }}
+                    {% else %}
+                        -
+                    {% endif %}
                     </td>
-                </tr>
-                {% endfor %}
-            </tbody>
+                <td class="text-center">$ {{ product.price }}</td>
+                <td class="text-center">{{ product.stock }}</td>
 
-        </table>
-    </div>
+                <td class="text-center">
+                    <div class="flex justify-center gap-2">
+
+                        <button class="p-2 border border-gray-300 rounded-md
+                                    hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition cursor-pointer"
+                                title="Editar">
+                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                        </button>
+
+                        <button class="p-2 border border-gray-300 rounded-md
+                                    hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                                title="Eliminar">
+                            <i data-lucide="trash" class="w-4 h-4"></i>
+                        </button>
+
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-base-content/60 py-6">
+                    No hay productos registrados
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
 
 </div>
 
 <dialog id="modal-product" class="modal">
     <div class="modal-box">
 
-        <h3 class="font-bold text-lg mb-4">Nuevo producto</h3>
+        <div class="flex items-center justify-center gap-2 mb-4">
+            <i data-lucide="box" class="w-5 h-5"></i>
+            <h3 class="font-bold text-lg leading-none">Nuevo Producto</h3>
+        </div>
 
         <form method="POST">
             {% csrf_token %}
-
-            <!-- Nombre -->
-            <input type="text" name="name"
-                   placeholder="Nombre del producto"
-                   class="input input-bordered w-full mb-3"
-                   required>
-
-            <select name="category"
-                    class="select select-bordered w-full mb-3"
-                    required>
-                <option disabled selected>Selecciona una categoría</option>
+            <div class="flex flex-col gap-2 mb-4">
+                <label class="text-sm text-gray-600">Nombre</label>
+                <input type="text" name="name"
+                placeholder="Nombre del producto"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm placeholder-gray-500"
+                required>
+                
+                <label class="text-sm text-gray-600">Precio</label>
+                <input type="number" name="price"
+                placeholder="Precio"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm placeholder-gray-500"
+                step="0.01" min="0"
+                required>
+                <label class="text-sm text-gray-600">Categoría</label>
+                
                 {% if not categories %}
                 <p class="text-sm text-red-500 mb-3">
                     Debes crear una categoría primero.
                 </p>
-                {% endif %}
+                {% endif %}         
+                <select name="category"
+                class="select w-full mb-3"
+                required>
+                
+                <option disabled selected>Selecciona una categoría</option>
+                
                 {% for category in categories %}
-                    <option value="{{ category.id }}">
-                        {{ category.name }}
-                    </option>
+                <option value="{{ category.id }}">
+                    {{ category.name }}
+                </option>
                 {% endfor %}
-            </select>
-
-            <input type="number" name="stock"
-                   placeholder="Stock inicial"
-                   class="input input-bordered w-full mb-4"
-                   min="0">
-
-            <div class="flex justify-end gap-2">
-                <button type="button" class="btn"
-                        onclick="document.getElementById('modal-product').close()">
+                
+                </select>
+            
+                <label class="text-sm text-gray-600">Stock</label>
+                <input type="number" name="stock"
+                placeholder="Stock inicial"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm placeholder-gray-500"
+                min="0">
+                
+                <label class="text-sm text-gray-600">Descripción</label>
+                <textarea name="description"
+                placeholder="Descripción (opcional)"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm placeholder-gray-500"></textarea>
+                
+                <div class="flex justify-end gap-2">
+                    <button type="button" class="btn"
+                    onclick="document.getElementById('modal-product').close()">
                     Cancelar
-                </button>
-
-                <button type="submit" class="btn bg-black text-white">
-                    Guardar
-                </button>
+                    </button>
+            
+                    <button type="submit" class="btn bg-black text-white">
+                        Guardar
+                    </button>
+                </div>
+        
             </div>
-
         </form>
-
+        
     </div>
 </dialog>
 

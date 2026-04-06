@@ -5,22 +5,29 @@
 <div class="max-w-5xl mx-auto">
 
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold">Categorías</h1>
 
-        <button class="btn btn-sm bg-black text-white hover:bg-gray-800"
-                onclick="document.getElementById('modal-category').showModal()">
-            + Nueva categoría
+        <div class="flex items-center gap-2">
+            <i data-lucide="layers" class="w-6 h-6 drop-shadow-lg"></i>
+            <h1 class="text-2xl font-semibold tracking-tight drop-shadow-lg">Categorías</h1>
+        </div>
+
+        <button id="create-category-btn"
+                class="btn btn-sm bg-black text-white hover:bg-gray-800 flex items-center gap-2">
+            
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Nueva categoría
         </button>
+
     </div>
 
-    <!-- Tabla -->
     <div class="bg-base-100 border border-base-300 rounded-xl shadow-sm overflow-hidden">
         <table class="table w-full">
             <thead class="bg-base-200">
                 <tr>
                     <th>#</th>
                     <th>Nombre</th>
-                    <th>Descripción</th>
+                    <th class="text-center">Descripción</th>
+                    <th class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +35,36 @@
                 <tr class="hover">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ category.name }}</td>
-                    <td>{{ category.description }}</td>
+                    <td class="text-center">
+                    {% if category.description %}
+                        {{ category.description }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    </td>
+                    <td class="text-center">
+                    <div class="flex justify-center gap-2">
+
+                        <!-- boton editar -->
+                        <button class="edit-category-btn p-2 border border-gray-300 rounded-md
+                                    hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition cursor-pointer"
+                                title="Editar"
+                                data-id="{{ category.id }}"
+                                data-name="{{ category.name }}"
+                                data-description="{{ category.description|default:'' }}"
+                            >
+                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                        </button>
+
+                        <!-- boton eliminar -->
+                        <button class="p-2 border border-gray-300 rounded-md
+                                    hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                                title="Eliminar">
+                            <i data-lucide="trash" class="w-4 h-4"></i>
+                        </button>
+
+                    </div>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -44,29 +80,43 @@
 
 </div>
 
+<!-- dialog -->
+
 <dialog id="modal-category" class="modal">
     <div class="modal-box">
-
-        <h3 class="font-bold text-lg mb-4">Nueva categoría</h3>
+        <div class="flex items-center justify-center gap-2 mb-4">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+            <h3 id="modal-title" class="font-bold text-lg leading-none">Nueva categoría</h3>
+        </div>
 
         <form method="POST">
             {% csrf_token %}
+                <div class="flex flex-col gap-2 mb-4">
+                    <input type="hidden" name="category_id" id="category_id">              
+                    <label class="text-sm text-gray-600">Nombre</label>
+                    
+                    <input type="text" name="name"
+                    placeholder="Nombre de la Categoría"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm placeholder-gray-500"
+                    required>
+                </div>
+                <div class="flex flex-col gap-2 mb-4">
+                    <label class="text-sm text-gray-600">Descripción</label>
+                    <textarea name="description"
+                            placeholder="Descripción (opcional)"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm placeholder-gray-500"></textarea>                    
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button type="button" class="btn"
+                            onclick="document.getElementById('modal-category').close()">
+                        Cancelar
+                    </button>
 
-            <input type="text" name="name"
-                   placeholder="Nombre de la categoría"
-                   class="input input-bordered w-full mb-4"
-                   required>
-
-            <div class="flex justify-end gap-2">
-                <button type="button" class="btn"
-                        onclick="document.getElementById('modal-category').close()">
-                    Cancelar
-                </button>
-
-                <button type="submit" class="btn bg-black text-white">
-                    Guardar
-                </button>
-            </div>
+                    <button type="submit" class="btn bg-black text-white">
+                        Guardar
+                    </button>
+                </div>
+                
         </form>
 
     </div>

@@ -8,10 +8,28 @@ def home(request):
 
 def category(request):
     if request.method == 'POST':
+        category_id = request.POST.get('category_id')
         name = request.POST.get('name')
+        description = request.POST.get('description')
 
-        if name and not Category.objects.filter(name__iexact=name).exists():
-            Category.objects.create(name=name)
+        if category_id:
+            # EDITAR
+            category = Category.objects.filter(id=category_id).first()
+
+            if category:
+                # Validar duplicados (excluyendo el actual)
+                if not Category.objects.filter(name__iexact=name).exclude(id=category_id).exists():
+                    category.name = name
+                    category.description = description
+                    category.save()
+
+        else:
+            # CREAR
+            if name and not Category.objects.filter(name__iexact=name).exists():
+                Category.objects.create(
+                    name=name,
+                    description=description
+                )
 
         return redirect('category')
 
