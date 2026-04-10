@@ -13,18 +13,15 @@ def category(request):
         description = request.POST.get('description')
 
         if category_id:
-            # EDITAR
             category = Category.objects.filter(id=category_id).first()
 
             if category:
-                # Validar duplicados (excluyendo el actual)
                 if not Category.objects.filter(name__iexact=name).exclude(id=category_id).exists():
                     category.name = name
                     category.description = description
                     category.save()
 
         else:
-            # CREAR
             if name and not Category.objects.filter(name__iexact=name).exists():
                 Category.objects.create(
                     name=name,
