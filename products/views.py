@@ -37,17 +37,36 @@ def category(request):
 
 def product(request):
     if request.method == 'POST':
+        product_id = request.POST.get('product_id')
         name = request.POST.get('name')
+        price = request.POST.get('price')
         category_id = request.POST.get('category')
         stock = request.POST.get('stock')
+        description = request.POST.get('description')
 
-        if name and category_id:
-            category = Category.objects.get(id=category_id)
-            Product.objects.create(
-                name=name,
-                category=category,
-                stock=stock or 0
-            )
+        if category_id:
+            category = Category.objects.filter(id=category_id).first()
+
+            if product_id:
+                # EDITAR
+                product = Product.objects.filter(id=product_id).first()
+                if product and category:
+                    product.name = name
+                    product.price = price or 0
+                    product.category = category
+                    product.stock = stock or 0
+                    product.description = description
+                    product.save()
+            else:
+                # CREAR
+                if name and category:
+                    Product.objects.create(
+                        name=name,
+                        price=price or 0,
+                        category=category,
+                        stock=stock or 0,
+                        description=description
+                    )
 
         return redirect('product')
 
