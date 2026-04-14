@@ -42,6 +42,14 @@ function handleEditProduct(button) {
     });
 }
 
+function handleDeleteProduct(button) {
+    const id = button.dataset.id;
+
+    document.getElementById('delete_product_id').value = id;
+
+    document.getElementById('modal-delete-product').showModal();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
     // Crear
@@ -56,6 +64,15 @@ document.addEventListener("DOMContentLoaded", function () {
     editButtons.forEach(button => {
         button.addEventListener("click", function () {
             handleEditProduct(this);
+        });
+    });
+
+    // Eliminar
+    const deleteButtons = document.querySelectorAll(".delete-product-btn");
+
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            handleDeleteProduct(this);
         });
     });
 

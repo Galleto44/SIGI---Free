@@ -26,15 +26,25 @@ function handleEditCategory(button) {
     fillCategoryForm({ id, name, description });
 }
 
+function handleDeleteCategory(button) {
+    const id = button.dataset.id;
+
+    console.log("ID a eliminar:", id);
+
+    document.getElementById('delete_category_id').value = id;
+
+    document.getElementById('modal-delete-category').showModal();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Botón crear
+    // crear
     const createBtn = document.getElementById("create-category-btn");
     if (createBtn) {
         createBtn.addEventListener("click", handleCreateCategory);
     }
 
-    // Botones editar
+    // editar
     const editButtons = document.querySelectorAll(".edit-category-btn");
 
     editButtons.forEach(button => {
@@ -42,5 +52,20 @@ document.addEventListener("DOMContentLoaded", function () {
             handleEditCategory(this);
         });
     });
+
+    // eliminar
+    const deleteButtons = document.querySelectorAll(".delete-category-btn");
+
+    deleteButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            handleDeleteCategory(this);
+        });
+    });
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("error") === "has_products") {
+        document.getElementById('modal-error-category').showModal();
+    }
 
 });

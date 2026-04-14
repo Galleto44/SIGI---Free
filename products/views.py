@@ -8,12 +8,34 @@ def home(request):
 
 def category(request):
     if request.method == 'POST':
+
+        # eliminar
+
+        delete_id = request.POST.get('delete_category_id')
+        if delete_id:
+            category = Category.objects.filter(id=delete_id).first()
+
+            if category:
+                # bloquear
+                if category.products.filter(is_active=True).exists():
+                    return redirect('/category/?error=has_products')
+
+                # eliminar
+                category.is_active = False
+                category.save()
+
+            return redirect('category')
+        
+        # crear / editar
+
         category_id = request.POST.get('category_id')
         name = request.POST.get('name')
         description = request.POST.get('description')
 
         if category_id:
             category = Category.objects.filter(id=category_id).first()
+
+            # editar
 
             if category:
                 if not Category.objects.filter(name__iexact=name).exclude(id=category_id).exists():
@@ -22,6 +44,9 @@ def category(request):
                     category.save()
 
         else:
+
+            # crear
+
             if name and not Category.objects.filter(name__iexact=name).exists():
                 Category.objects.create(
                     name=name,
@@ -30,13 +55,25 @@ def category(request):
 
         return redirect('category')
 
-    categories = Category.objects.all()
+    categories = Category.objects.filter(is_active=True)
     return render(request, 'category.html', {
         'categories': categories
     })
 
 def product(request):
     if request.method == 'POST':
+
+        # SOFT DELETE
+        delete_id = request.POST.get('delete_product_id')
+        if delete_id:
+            product = Product.objects.filter(id=delete_id).first()
+            if product:
+                product.is_active = False
+                product.save()
+            return redirect('product')
+        
+        # EDITAR / CREAR
+        
         product_id = request.POST.get('product_id')
         name = request.POST.get('name')
         price = request.POST.get('price')
@@ -70,8 +107,8 @@ def product(request):
 
         return redirect('product')
 
-    products = Product.objects.select_related('category').all()
-    categories = Category.objects.all()
+    products = Product.objects.filter(is_active=True)
+    categories = Category.objects.filter(is_active=True)
 
     return render(request, 'product.html', {
         'products': products,
