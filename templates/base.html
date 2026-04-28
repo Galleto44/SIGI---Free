@@ -8,11 +8,11 @@
     <title>{% block title %}SIGI{% endblock %}</title>
 </head>
 <body class="font-sans bg-gray-100 min-h-screen">
-    <div class="flex">
+    <div class="flex w-full">
 
         {% include "sidebar.html" %}
 
-        <main class="flex-1 p-10">
+        <main class="flex-1 m-0 p-0">
             {% block content %}
             {% endblock %}
         </main>
@@ -20,7 +20,5 @@
     </div>
 <script src="https://unpkg.com/lucide@latest" defer></script>
 <script src="{% static 'js/main.js' %}" defer></script>
-<script src="{% static 'js/category.js' %}" defer></script>
-<script src="{% static 'js/product.js' %}" defer></script>
 </body>
 </html>

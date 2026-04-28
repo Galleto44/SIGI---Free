@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Sales{% endblock %}
+
+{% block content %}
+
+<div class="mb-6 bg-base-100 border border-base-300 p-4">
+    <div class="flex items-center gap-3">
+        <div class="bg-black text-white p-3 rounded-xl flex items-center justify-center">
+            <i data-lucide="circle-dollar-sign" class="w-6 h-6"></i>
+        </div>
+
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight">
+                Ventas
+            </h1>
+            <p class="text-sm text-gray-600">
+                Lista de Ventas registradas.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-6xl mx-auto">
+
+    <div class="flex justify-end items-center mb-6">
+        <a href="{% url 'create_sale_page' %}"
+            class="btn btn-sm bg-black text-white hover:bg-gray-800 flex items-center gap-2">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            Nueva Venta
+        </a>
+    </div>
+
+    <div class="bg-base-100 border border-base-300 rounded-xl shadow-sm overflow-hidden">
+    <table class="table w-full">
+        <thead class="bg-base-200">
+            <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th class="text-center">Total</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in sales %}
+            <tr class="hover">
+                <td>{{ forloop.counter }}</td>
+                <td>{{ sale.date|date:"d/m/Y" }}</td>
+                <td class="text-center font-medium">
+                    $ {{ sale.total }}
+                </td>
+
+                <!-- Acciones -->
+                <td class="text-center">
+                    <div class="flex justify-center gap-2">
+
+                        <!-- Ver detalle -->
+                        <button type="button"
+                                class="view-sale-btn p-2 border border-gray-300 rounded-md
+                                       hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer"
+                                title="Ver detalle"
+                                data-id="{{ sale.id }}">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+
+                        <!-- Anular -->
+                        <button type="button"
+                                class="cancel-sale-btn p-2 border border-gray-300 rounded-md
+                                       hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition cursor-pointer
+                                       {% if not sale.is_active %}opacity-50 cursor-not-allowed{% endif %}"
+                                title="Anular"
+                                data-id="{{ sale.id }}">
+                            <i data-lucide="x-circle" class="w-4 h-4"></i>
+                        </button>
+
+                    </div>
+                </td>
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-base-content/60 py-6">
+                    No hay ventas registradas
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+{% endblock %}

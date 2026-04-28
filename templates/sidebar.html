@@ -49,15 +49,17 @@
                 </details>
             </li>
             <li class="py-1">
-                <a class="w-full px-4 py-2 rounded-lg transition">
-                    <i data-lucide="receipt" class="w-4 h-4"></i>
+                <a href="{% url 'sales' %}" class="
+                        w-full px-4 py-2 rounded-lg transition
+                        {% if 'sales' in request.path %}
+                        bg-black text-white
+                        {% endif %}">
+                    <i data-lucide="circle-dollar-sign" class="w-4 h-4"></i>
                     Ventas
                 </a>
             </li>
 
         </ul>
     </aside>
-    <main class="flex-1 p-6">
-    </main>
 
 </div>

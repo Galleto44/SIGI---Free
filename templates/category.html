@@ -1,23 +1,32 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
-<div class="max-w-5xl mx-auto">
-
-    <div class="flex justify-between items-center mb-6">
-
-        <div class="flex items-center gap-2">
-            <i data-lucide="layers" class="w-6 h-6 drop-shadow-lg"></i>
-            <h1 class="text-2xl font-semibold tracking-tight drop-shadow-lg">Categorías</h1>
+<div class="mb-6 bg-base-100 border border-base-300 p-4">
+    <div class="flex items-center gap-3">
+        <div class="bg-black text-white p-3 rounded-xl flex items-center justify-center">
+            <i data-lucide="layers" class="w-6 h-6"></i>
         </div>
 
+        <div>
+            <h1 class="text-2xl font-semibold tracking-tight">
+                Categorías
+            </h1>
+            <p class="text-sm text-gray-600">
+                Lista de Categorías para los Productos.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-6xl mx-auto">
+    <div class="flex justify-end items-center mb-6">
         <button id="create-category-btn"
                 class="btn btn-sm bg-black text-white hover:bg-gray-800 flex items-center gap-2">
-            
             <i data-lucide="plus" class="w-4 h-4"></i>
             Nueva categoría
         </button>
-
     </div>
 
     <div class="bg-base-100 border border-base-300 rounded-xl shadow-sm overflow-hidden">
@@ -34,7 +43,7 @@
                 {% for category in categories %}
                 <tr class="hover">
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ category.name }}</td>
+                    <td class="font-medium">{{ category.name }}</td>
                     <td class="text-center">
                     {% if category.description %}
                         {{ category.description }}
@@ -180,5 +189,7 @@
 
     </div>
 </dialog>
+
+<script src="{% static 'js/category.js' %}" defer></script>
 
 {% endblock %}

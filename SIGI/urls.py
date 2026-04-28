@@ -16,12 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from products import views
+from products import views as products_views
+from sales import views as sales_views
 
 urlpatterns = [
     path('__reload__/', include('django_browser_reload.urls')),
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('category/', views.category, name='category'),
-    path('product/', views.product, name='product'),
+    path('', products_views.home, name='home'),
+    path('category/', products_views.category, name='category'),
+    path('product/', products_views.product, name='product'),
+    path('sales/', sales_views.sales, name='sales'),
+    path('sales/create/', sales_views.create_sale_page, name='create_sale_page'),
+    path('sales/store/', sales_views.create_sale, name='create_sale'),
 ]
