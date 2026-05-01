@@ -28,7 +28,7 @@ function getProductById(productId) {
 }
 
 function createProductSelect() {
-    let options = `<option value="">Selecciona un producto</option>`;
+    let options = `<option value = "" disabled selected>Selecciona un producto</option>`;
 
     products.forEach(product => {
         options += `
@@ -38,7 +38,7 @@ function createProductSelect() {
         `;
     });
 
-    return `<select class="product-select w-full border rounded px-2 py-1">
+    return `<select class="product-select select select-bordered w-96">
                 ${options}
             </select>`;
 }
@@ -116,16 +116,16 @@ function renderOneRow() {
             ${createProductSelect()}
         </td>
 
-        <td class="text-center">
+        <td>
             <input type="number" value="1" min="1"
-                class="quantity-input w-16 text-center border rounded">
+                class="quantity-input input input-bordered w-20 text-center">
         </td>
 
-        <td class="text-center price">$0.00</td>
+        <td class="price">$0.00</td>
 
-        <td class="text-center subtotal">$0.00</td>
+        <td class="subtotal">$0.00</td>
 
-        <td class="text-center">
+        <td>
             <button type="button"
                     class="remove-btn p-2 border border-gray-300 rounded-md
                         hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition cursor-pointer">

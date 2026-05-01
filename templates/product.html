@@ -138,16 +138,16 @@
                 </p>
                 {% endif %}         
                 <select name="category"
-                class="select w-full mb-3"
-                required>
-                
-                <option disabled selected>Selecciona una categoría</option>
-                
-                {% for category in categories %}
-                <option value="{{ category.id }}">
-                    {{ category.name }}
-                </option>
-                {% endfor %}
+                    class="select w-full mb-3"
+                    required>
+                        
+                    <option disabled selected>Selecciona una categoría</option>
+                    
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
                 
                 </select>
             

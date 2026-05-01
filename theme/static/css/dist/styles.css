@@ -236,6 +236,10 @@
     --color-red-500: oklch(63.7% 0.237 25.331);
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-700: oklch(50.5% 0.213 27.518);
+    --color-yellow-400: oklch(85.2% 0.199 91.936);
+    --color-yellow-500: oklch(79.5% 0.184 86.047);
+    --color-yellow-600: oklch(68.1% 0.162 75.834);
+    --color-yellow-700: oklch(55.4% 0.135 66.442);
     --color-green-50: oklch(98.2% 0.018 155.826);
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
@@ -1315,8 +1319,14 @@
       box-shadow: 0 2px calc(var(--depth) * 3px) -2px var(--color-neutral);
     }
   }
+  .fixed {
+    position: fixed;
+  }
   .static {
     position: static;
+  }
+  .sticky {
+    position: sticky;
   }
   @layer daisyui.l1.l2 {
     .toast-end {
@@ -1334,6 +1344,12 @@
       bottom: auto;
       --toast-y: 0;
     }
+  }
+  .top-0 {
+    top: calc(var(--spacing) * 0);
+  }
+  .left-0 {
+    left: calc(var(--spacing) * 0);
   }
   @layer daisyui.l1.l2.l3 {
     .modal-box {
@@ -1495,9 +1511,6 @@
   .table {
     display: table;
   }
-  .h-2 {
-    height: calc(var(--spacing) * 2);
-  }
   .h-4 {
     height: calc(var(--spacing) * 4);
   }
@@ -1509,18 +1522,6 @@
   }
   .h-10 {
     height: calc(var(--spacing) * 10);
-  }
-  .h-12 {
-    height: calc(var(--spacing) * 12);
-  }
-  .h-16 {
-    height: calc(var(--spacing) * 16);
-  }
-  .h-20 {
-    height: calc(var(--spacing) * 20);
-  }
-  .h-24 {
-    height: calc(var(--spacing) * 24);
   }
   .h-screen {
     height: 100vh;
@@ -1546,12 +1547,6 @@
   .w-20 {
     width: calc(var(--spacing) * 20);
   }
-  .w-24 {
-    width: calc(var(--spacing) * 24);
-  }
-  .w-26 {
-    width: calc(var(--spacing) * 26);
-  }
   .w-28 {
     width: calc(var(--spacing) * 28);
   }
@@ -1560,6 +1555,12 @@
   }
   .w-64 {
     width: calc(var(--spacing) * 64);
+  }
+  .w-80 {
+    width: calc(var(--spacing) * 80);
+  }
+  .w-96 {
+    width: calc(var(--spacing) * 96);
   }
   .w-full {
     width: 100%;
@@ -1647,6 +1648,9 @@
   .border-purple-200 {
     border-color: var(--color-purple-200);
   }
+  .\!bg-yellow-500 {
+    background-color: var(--color-yellow-500) !important;
+  }
   .bg-base-100 {
     background-color: var(--color-base-100);
   }
@@ -1672,6 +1676,12 @@
     .bg-white\/40 {
       background-color: color-mix(in oklab, var(--color-white) 40%, transparent);
     }
+  }
+  .bg-yellow-500 {
+    background-color: var(--color-yellow-500);
+  }
+  .bg-yellow-600 {
+    background-color: var(--color-yellow-600);
   }
   .p-0 {
     padding: calc(var(--spacing) * 0);
@@ -1779,6 +1789,12 @@
       --alert-color: var(--color-info);
     }
   }
+  .\!text-white {
+    color: var(--color-white) !important;
+  }
+  .\!text-yellow-500 {
+    color: var(--color-yellow-500) !important;
+  }
   .text-base-content\/60 {
     color: var(--color-base-content);
   }
@@ -1787,16 +1803,11 @@
       color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
     }
   }
-  .text-base-content\/70 {
-    color: var(--color-base-content);
-  }
-  @supports (color: color-mix(in lab, red, red)) {
-    .text-base-content\/70 {
-      color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
-    }
-  }
   .text-black {
     color: var(--color-black);
+  }
+  .text-blue-500 {
+    color: var(--color-blue-500);
   }
   .text-gray-500 {
     color: var(--color-gray-500);
@@ -1815,6 +1826,12 @@
   }
   .text-white {
     color: var(--color-white);
+  }
+  .text-yellow-400 {
+    color: var(--color-yellow-400);
+  }
+  .text-yellow-500 {
+    color: var(--color-yellow-500);
   }
   .placeholder-gray-500::placeholder {
     color: var(--color-gray-500);
@@ -1848,11 +1865,41 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
+  @layer daisyui.l1 {
+    .btn-outline:not( .btn-active, :hover, :active:focus, :focus-visible, input:checked:not(.filter .btn), :disabled, [disabled], .btn-disabled ) {
+      --btn-shadow: "";
+      --btn-bg: #0000;
+      --btn-fg: var(--btn-color);
+      --btn-border: var(--btn-color);
+      --btn-noise: none;
+    }
+    @media (hover: none) {
+      .btn-outline:not(.btn-active, :active, :focus-visible, input:checked:not(.filter .btn)):hover {
+        --btn-shadow: "";
+        --btn-bg: #0000;
+        --btn-fg: var(--btn-color);
+        --btn-border: var(--btn-color);
+        --btn-noise: none;
+      }
+    }
+  }
   @layer daisyui.l1.l2 {
     .btn-sm {
       --fontsize: 0.75rem;
       --btn-p: 0.75rem;
       --size: calc(var(--size-field, 0.25rem) * 8);
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .btn-error {
+      --btn-color: var(--color-error);
+      --btn-fg: var(--color-error-content);
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .btn-warning {
+      --btn-color: var(--color-warning);
+      --btn-fg: var(--color-warning-content);
     }
   }
   @media (hover: hover) {
@@ -1871,13 +1918,13 @@
     }
   }
   @media (hover: hover) {
-    .hover\:bg-blue-50:hover {
-      background-color: var(--color-blue-50);
+    .hover\:\!bg-yellow-600:hover {
+      background-color: var(--color-yellow-600) !important;
     }
   }
   @media (hover: hover) {
-    .hover\:bg-gray-100:hover {
-      background-color: var(--color-gray-100);
+    .hover\:bg-blue-50:hover {
+      background-color: var(--color-blue-50);
     }
   }
   @media (hover: hover) {
@@ -1903,6 +1950,11 @@
   @media (hover: hover) {
     .hover\:bg-red-700:hover {
       background-color: var(--color-red-700);
+    }
+  }
+  @media (hover: hover) {
+    .hover\:bg-yellow-700:hover {
+      background-color: var(--color-yellow-700);
     }
   }
   @media (hover: hover) {

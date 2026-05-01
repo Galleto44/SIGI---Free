@@ -45,10 +45,10 @@
                 <tr>
                     <th class="w-12">#</th>
                     <th>Producto</th>
-                    <th class="text-center">Cantidad</th>
-                    <th class="text-center">Precio</th>
-                    <th class="text-center">Subtotal</th>
-                    <th class="w-20 text-center">Acción</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
 
@@ -103,9 +103,14 @@
 
 <dialog id="resetCartModal" class="modal">
     <div class="modal-box">
-        <h3 class="font-semibold text-lg">
-            Reiniciar carrito
-        </h3>
+
+        <div class="flex items-center justify-center gap-2 mb-4">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-500"></i>
+            <h3 class="font-semibold text-lg">
+                Reiniciar carrito
+            </h3>
+        </div>
+        
         <p class="py-2 text-sm text-gray-600">
             ¿Estás seguro de que deseas eliminar todos los productos del carrito?
         </p>
@@ -119,7 +124,7 @@
 
                 <button id="confirm-reset-btn"
                         type="button"
-                        class="btn bg-red-600 text-white hover:bg-red-700">
+                        class="btn btn-warning text-white">
                     Reiniciar
                 </button>
 
@@ -130,11 +135,11 @@
 
 <dialog id="alertModal" class="modal">
     <div class="modal-box">
-        <h3 class="font-semibold text-lg">
+        <h3 class="text-center font-semibold text-lg">
             Atención
         </h3>
 
-        <p id="alertMessage" class="py-2 text-sm text-gray-600">
+        <p id="alertMessage" class="text-center py-2 text-sm text-gray-600">
             <!-- JS inserta el mensaje -->
         </p>
 
