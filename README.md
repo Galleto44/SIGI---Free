@@ -67,6 +67,10 @@ python manage.py createsuperuser
 
 ## 💻 Ejecución del Proyecto
 
+```bash
+python.exe .\manage.py runserver
+```
+
 Para ver el proyecto en funcionamiento con compilación de estilos en tiempo real:
 
 ```bash
