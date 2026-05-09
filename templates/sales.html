@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}Sales{% endblock %}
 
 {% block content %}
@@ -32,62 +34,131 @@
     </div>
 
     <div class="bg-base-100 border border-base-300 rounded-xl shadow-sm overflow-hidden">
-    <table class="table w-full">
-        <thead class="bg-base-200">
-            <tr>
-                <th>#</th>
-                <th>Fecha</th>
-                <th class="text-center">Total</th>
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for sale in sales %}
-            <tr class="hover">
-                <td>{{ forloop.counter }}</td>
-                <td>{{ sale.date|date:"d/m/Y" }}</td>
-                <td class="text-center font-medium">
-                    $ {{ sale.total }}
-                </td>
+        <table class="table w-full">
+            <thead class="bg-base-200">
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th class="text-center">Total</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                <tr class="hover">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ sale.date|date:"d/m/Y" }}</td>
+                    <td class="text-center font-medium">
+                        $ {{ sale.total }}
+                    </td>
 
-                <!-- Acciones -->
-                <td class="text-center">
-                    <div class="flex justify-center gap-2">
+                    <!-- Acciones -->
+                    <td class="text-center">
+                        <div class="flex justify-center gap-2">
 
-                        <!-- Ver detalle -->
-                        <button type="button"
-                                class="view-sale-btn p-2 border border-gray-300 rounded-md
-                                       hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer"
-                                title="Ver detalle"
-                                data-id="{{ sale.id }}">
-                            <i data-lucide="eye" class="w-4 h-4"></i>
-                        </button>
+                            <!-- Ver detalle -->
+                            <button type="button"
+                                    class="view-sale-btn p-2 border border-gray-300 rounded-md
+                                        hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer"
+                                    title="Ver detalle"
+                                    data-id="{{ sale.id }}">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
 
-                        <!-- Anular -->
-                        <button type="button"
-                                class="cancel-sale-btn p-2 border border-gray-300 rounded-md
-                                       hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition cursor-pointer
-                                       {% if not sale.is_active %}opacity-50 cursor-not-allowed{% endif %}"
-                                title="Anular"
-                                data-id="{{ sale.id }}">
-                            <i data-lucide="x-circle" class="w-4 h-4"></i>
-                        </button>
+                            <!-- Anular -->
+                            <button type="button"
+                                    class="cancel-sale-btn p-2 border border-gray-300 rounded-md
+                                        hover:border-red-500 hover:text-red-600 hover:bg-red-50 transition cursor-pointer
+                                        {% if not sale.is_active %}opacity-50 cursor-not-allowed{% endif %}"
+                                    title="Anular"
+                                    data-id="{{ sale.id }}">
+                                <i data-lucide="x-circle" class="w-4 h-4"></i>
+                            </button>
 
-                    </div>
-                </td>
-            </tr>
+                        </div>
+                    </td>
+                </tr>
 
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center text-base-content/60 py-6">
-                    No hay ventas registradas
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-base-content/60 py-6">
+                        No hay ventas registradas
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
-</div>
+<dialog id="saleDetailModal" class="modal">
+    <div class="modal-box max-w-3xl">
+
+        <h3 class="font-semibold text-lg mb-2">
+            Detalle de Venta
+        </h3>
+
+        <p id="sale-date" class="text-sm text-gray-500 mb-4"></p>
+
+        <div class="overflow-x-auto">
+            <table class="table w-full text-sm">
+                <thead class="bg-base-200">
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-center">Precio</th>
+                        <th class="text-center">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="sale-detail-body">
+                    <!-- JS renderiza -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-4 text-right">
+            <p class="text-lg font-semibold">
+                Total: $<span id="sale-total"></span>
+            </p>
+        </div>
+
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cerrar</button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<dialog id="cancelSaleModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-semibold text-lg">
+            Anular venta
+        </h3>
+
+        <p class="py-2 text-sm text-gray-600">
+            ¿Estás seguro de que deseas anular esta venta?
+        </p>
+
+        <div class="modal-action justify-center">
+            <form method="dialog" class="flex gap-2">
+
+                <button class="btn">
+                    Cancelar
+                </button>
+
+                <button id="confirm-cancel-btn"
+                        type="button"
+                        class="btn bg-red-600 text-white hover:bg-red-700">
+                    Anular
+                </button>
+
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<script src="{% static 'js/sales.js' %}"></script>
 
 {% endblock %}

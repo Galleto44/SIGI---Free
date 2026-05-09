@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.exceptions import ValidationError
 from .models import Category, Product
 
 # Create your views here.
@@ -7,55 +8,61 @@ def home(request):
     return render(request, 'home.html', {'products': products})
 
 def category(request):
+
     if request.method == 'POST':
 
-        # eliminar
-
+        # ELIMINAR (soft delete)
         delete_id = request.POST.get('delete_category_id')
+
         if delete_id:
-            category = Category.objects.filter(id=delete_id).first()
+            category = Category.objects.filter(id=delete_id, is_active=True).first()
 
             if category:
-                # bloquear
+
+                # bloquear si tiene productos activos
                 if category.products.filter(is_active=True).exists():
                     return redirect('/category/?error=has_products')
 
-                # eliminar
                 category.is_active = False
                 category.save()
 
             return redirect('category')
-        
-        # crear / editar
 
+        # CREAR / EDITAR
         category_id = request.POST.get('category_id')
         name = request.POST.get('name')
         description = request.POST.get('description')
 
-        if category_id:
-            category = Category.objects.filter(id=category_id).first()
+        try:
+            if category_id:
+                # EDITAR
+                category = Category.objects.filter(id=category_id, is_active=True).first()
 
-            # editar
-
-            if category:
-                if not Category.objects.filter(name__iexact=name).exclude(id=category_id).exists():
+                if category:
                     category.name = name
                     category.description = description
                     category.save()
 
-        else:
-
-            # crear
-
-            if name and not Category.objects.filter(name__iexact=name).exists():
+            else:
+                # CREAR
                 Category.objects.create(
                     name=name,
                     description=description
                 )
 
+        except ValidationError as e:
+            categories = Category.objects.filter(is_active=True)
+
+            return render(request, 'category.html', {
+                'categories': categories,
+                'errors': e.message_dict
+            })
+
         return redirect('category')
 
+    # LISTADO
     categories = Category.objects.filter(is_active=True)
+
     return render(request, 'category.html', {
         'categories': categories
     })

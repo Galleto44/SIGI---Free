@@ -28,4 +28,6 @@ urlpatterns = [
     path('sales/', sales_views.sales, name='sales'),
     path('sales/create/', sales_views.create_sale_page, name='create_sale_page'),
     path('sales/store/', sales_views.create_sale, name='create_sale'),
+    path('sales/<int:sale_id>/detail/', sales_views.get_sale_detail, name='sale_detail'),
+    path('sales/<int:sale_id>/cancel/', sales_views.cancel_sale, name='cancel_sale'),
 ]
