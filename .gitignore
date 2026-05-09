@@ -1,11 +1,22 @@
-# Created by venv; see https://docs.python.org/3/library/venv.html
+# Entorno Virtual
 venv/
+.venv/
+env/
 __pycache__/
 *.pyc
+
+# Base de Datos (Cada colaborador debe tener la suya local)
 db.sqlite3
 
-# node
-
+# Node / Tailwind
 node_modules/
-theme/node_modules
-theme/static_src/node_modules
+/**/node_modules/
+# Ignora el CSS compilado de Tailwind (se genera localmente)
+theme/static/css/dist/
+
+# Configuraciones sensibles
+.env
+
+# Archivos de Sistema
+.DS_Store
+Thumbs.db
