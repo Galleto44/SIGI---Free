@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SIGI</title>
+
+    <!-- MISMO CSS QUE TU BASE -->
+    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
+</head>
+
+<body class="bg-black min-h-screen flex items-center justify-center font-sans">
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+
+        <!-- HEADER -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-black">SIGI</h1>
+            <p class="text-gray-500 text-sm mt-1">Inicia sesión para continuar</p>
+        </div>
+
+        <!-- FORM -->
+        <form method="POST" class="space-y-5">
+            {% csrf_token %}
+
+            <div>
+                <label class="text-sm text-gray-600">Usuario</label>
+                <input type="text" name="username" required
+                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg
+                              focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
+
+            <div>
+                <label class="text-sm text-gray-600">Contraseña</label>
+                <input type="password" name="password" required
+                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg
+                              focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
+
+            {% if error %}
+            <div class="text-sm text-red-600 bg-red-50 p-2 rounded">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <button type="submit"
+                    class="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition">
+                Iniciar sesión
+            </button>
+
+        </form>
+
+        <!-- FOOTER -->
+        <p class="text-center text-xs text-gray-400 mt-6">
+            Sistema de gestión interna
+        </p>
+
+    </div>
+
+</body>
+</html>

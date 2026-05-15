@@ -1,21 +1,69 @@
 import json
-from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
+from functools import wraps
 
-from products.models import Product, Category
+from products.models import Product
 from .models import Sale, SaleDetail
 
-# Create your views here.
+
+# =========================
+# HELPERS DE ROLES
+# =========================
+
+def role_required(*allowed_roles):
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+
+            if not request.user.is_authenticated:
+                return JsonResponse({'error': 'No autenticado'}, status=401)
+
+            user_roles = set(
+                request.user.groups.values_list('name', flat=True)
+            )
+
+            # ADMINISTRATOR = acceso total
+            if "administrator" in user_roles:
+                return view_func(request, *args, **kwargs)
+
+            # validación normal para otros roles
+            if not user_roles.intersection(set(allowed_roles)):
+                return JsonResponse({'error': 'Sin permisos'}, status=403)
+
+            return view_func(request, *args, **kwargs)
+
+        return wrapper
+    return decorator
+
+
+def is_admin(user):
+    return user.is_authenticated and user.groups.filter(name="administrator").exists()
+
+
+# =========================
+# LISTADO DE VENTAS
+# =========================
+
+@login_required
+@role_required("seller")
 def sales(request):
     sales = Sale.objects.filter(is_active=True).order_by('-date')
-    return render(request, 'sales.html', {'sales':sales})
+    return render(request, 'sales.html', {'sales': sales})
 
+
+# =========================
+# CREAR VENTA - PAGINA
+# =========================
+
+@login_required
+@role_required("seller")
 def create_sale_page(request):
+
     products = Product.objects.filter(is_active=True)
-    
+
     products_json = json.dumps([
         {
             "id": p.id,
@@ -30,7 +78,15 @@ def create_sale_page(request):
         'products_json': products_json
     })
 
+
+# =========================
+# CREAR VENTA (API)
+# =========================
+
+@login_required
+@role_required("seller")
 def create_sale(request):
+
     if request.method != 'POST':
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
@@ -54,7 +110,10 @@ def create_sale(request):
                 if quantity <= 0:
                     raise Exception("Cantidad inválida")
 
-                product = Product.objects.filter(id=product_id, is_active=True).first()
+                product = Product.objects.filter(
+                    id=product_id,
+                    is_active=True
+                ).first()
 
                 if not product:
                     raise Exception("Producto no encontrado")
@@ -73,7 +132,6 @@ def create_sale(request):
                     subtotal=subtotal
                 )
 
-                # descontar stock
                 product.stock -= quantity
                 product.save()
 
@@ -86,13 +144,22 @@ def create_sale(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
-    
 
+
+# =========================
+# DETALLE DE VENTA
+# =========================
+
+@login_required
+@role_required("seller")
 def get_sale_detail(request, sale_id):
-    try:
-        sale = Sale.objects.get(id=sale_id)
 
-        details = SaleDetail.objects.filter(sale=sale).select_related('product')
+    try:
+        sale = Sale.objects.get(id=sale_id, is_active=True)
+
+        details = SaleDetail.objects.filter(
+            sale=sale
+        ).select_related('product')
 
         items = []
 
@@ -113,30 +180,34 @@ def get_sale_detail(request, sale_id):
 
     except Sale.DoesNotExist:
         return JsonResponse({'error': 'Venta no encontrada'}, status=404)
-    
 
+
+# =========================
+# CANCELAR VENTA (SOLO ADMIN)
+# =========================
+
+@login_required
+@role_required("admin")
 def cancel_sale(request, sale_id):
+
     if request.method != 'POST':
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
     try:
         with transaction.atomic():
 
-            sale = Sale.objects.select_related().prefetch_related('details__product').filter(id=sale_id).first()
+            sale = Sale.objects.select_related().prefetch_related(
+                'details__product'
+            ).filter(id=sale_id, is_active=True).first()
 
             if not sale:
                 return JsonResponse({'error': 'Venta no encontrada'}, status=404)
 
-            if not sale.is_active:
-                return JsonResponse({'error': 'La venta ya fue anulada'}, status=400)
-
-            # devolver stock
             for detail in sale.details.all():
                 product = detail.product
                 product.stock += detail.quantity
                 product.save()
 
-            # marcar como inactiva
             sale.is_active = False
             sale.save()
 

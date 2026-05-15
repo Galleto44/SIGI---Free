@@ -30,4 +30,6 @@ urlpatterns = [
     path('sales/store/', sales_views.create_sale, name='create_sale'),
     path('sales/<int:sale_id>/detail/', sales_views.get_sale_detail, name='sale_detail'),
     path('sales/<int:sale_id>/cancel/', sales_views.cancel_sale, name='cancel_sale'),
+    path('login/', products_views.login_view, name='login'),
+    path('logout/', products_views.logout_view, name='logout'),
 ]

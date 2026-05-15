@@ -4,62 +4,81 @@
 
         <div class="mb-6 pb-4 border-b border-base-300 flex flex-col items-center text-center">
             <h1 class="text-xl font-bold">SIGI</h1>
-            <p class="text-sm text-base-content/60">Free</p>
+
+            <p class="text-sm text-base-content/60">
+                {% if request.user.is_authenticated %}
+                    {% if "administrator" in request.user.groups.values_list|join:" " %}
+                        Administrador
+                    {% else %}
+                        Vendedor
+                    {% endif %}
+                {% endif %}
+            </p>
         </div>
 
         <ul class="menu w-full">
+
+            <!-- INICIO -->
             <li class="py-1">
-                <a  href="{% url 'home' %}"
-                class="
-                w-full px-4 py-2 rounded-lg transition
-                {% if request.path == '/' %}
-                bg-black text-white
-                {% endif %}">
-                <i data-lucide="house" class="w-4 h-4"></i>
-                Inicio
-            </a>
-        </li>
-        <li>
-            <details {% if 'product' in request.path or 'category' in request.path %}open{% endif %}>
-                <summary class="w-full px-4 py-2 rounded-lg transition">
-                    <i data-lucide="package-open" class="w-4 h-4"></i>
-                    Inventario
-                </summary>
-                <ul>
-                    <li class="py-1">
-                        <a href="{% url 'category' %}" class="
-                        w-full px-4 py-2 rounded-lg transition
-                        {% if 'category' in request.path %}
-                        bg-black text-white
-                        {% endif %}">
-                            <i data-lucide="layers" class="w-4 h-4"></i>
-                            Categorías
-                        </a>
-                    </li class="py-1">
-                    <li>
-                        <a href="{% url 'product' %}" class="
-                        w-full px-4 py-2 rounded-lg transition
-                        {% if 'product' in request.path %}
-                        bg-black text-white
-                        {% endif %}">
-                            <i data-lucide="box" class="w-4 h-4"></i>
-                            Productos
-                        </a></li>
-                    </ul>
-                </details>
+                <a href="{% url 'home' %}"
+                   class="w-full px-4 py-2 rounded-lg transition {% if request.path == '/' %}bg-black text-white{% endif %}">
+                    Inicio
+                </a>
             </li>
+
+            <!-- VENTAS -->
             <li class="py-1">
-                <a href="{% url 'sales' %}" class="
-                        w-full px-4 py-2 rounded-lg transition
-                        {% if 'sales' in request.path %}
-                        bg-black text-white
-                        {% endif %}">
-                    <i data-lucide="circle-dollar-sign" class="w-4 h-4"></i>
+                <a href="{% url 'sales' %}"
+                   class="w-full px-4 py-2 rounded-lg transition {% if 'sales' in request.path %}bg-black text-white{% endif %}">
                     Ventas
                 </a>
             </li>
 
+            <!-- INVENTARIO SOLO ADMIN -->
+            {% if request.user.is_authenticated and "administrator" in request.user.groups.values_list|join:" " %}
+
+            <li>
+                <details {% if 'product' in request.path or 'category' in request.path %}open{% endif %}>
+
+                    <summary class="w-full px-4 py-2 rounded-lg transition">
+                        Inventario
+                    </summary>
+
+                    <ul>
+
+                        <li class="py-1">
+                            <a href="{% url 'category' %}"
+                               class="w-full px-4 py-2 rounded-lg transition {% if 'category' in request.path %}bg-black text-white{% endif %}">
+                                Categorías
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'product' %}"
+                               class="w-full px-4 py-2 rounded-lg transition {% if 'product' in request.path %}bg-black text-white{% endif %}">
+                                Productos
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </details>
+            </li>
+
+            {% endif %}
+
+            <!-- LOGOUT -->
+            {% if request.user.is_authenticated %}
+            <li class="mt-6 border-t border-base-300 pt-4">
+                <a href="{% url 'logout' %}"
+                   class="w-full px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition">
+                    Cerrar sesión
+                </a>
+            </li>
+            {% endif %}
+
         </ul>
+
     </aside>
 
 </div>
