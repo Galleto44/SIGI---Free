@@ -6,7 +6,48 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseForbidden
 
 from .models import Category, Product
+from sales.models import Sale, SaleDetail
 
+from django.db.models import Sum
+from django.utils.timezone import now
+
+current_month = now().month
+current_year = now().year
+
+monthly_sales = Sale.objects.filter(
+    is_active=True,
+    date__month=current_month,
+    date__year=current_year
+).aggregate(
+    total=Sum('total')
+)['total'] or 0
+
+today_sales = Sale.objects.filter(
+    is_active=True,
+    date__date=now().date()
+).aggregate(
+    total=Sum('total')
+)['total'] or 0
+
+top_product = SaleDetail.objects.filter(
+    sale__is_active=True,
+    sale__date__month=current_month,
+    sale__date__year=current_year
+).values(
+    'product__name'
+).annotate(
+    total_sold=Sum('quantity')
+).order_by('-total_sold').first()
+
+top_category = SaleDetail.objects.filter(
+    sale__is_active=True,
+    sale__date__month=current_month,
+    sale__date__year=current_year
+).values(
+    'product__category__name'
+).annotate(
+    total_sold=Sum('quantity')
+).order_by('-total_sold').first()
 
 # =========================
 # HELPERS DE ROLES
@@ -96,7 +137,12 @@ def logout_view(request):
 @role_required("administrator", "seller")
 def home(request):
     products = Product.objects.filter(is_active=True)
-    return render(request, 'home.html', {'products': products})
+    return render(request, 'home.html', {
+    'monthly_sales': monthly_sales,
+    'today_sales': today_sales,
+    'top_product': top_product,
+    'top_category': top_category,
+})
 
 
 # =========================

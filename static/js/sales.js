@@ -50,7 +50,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 // actualizar info general
-                totalEl.textContent = data.total.toFixed(2);
+                document.getElementById('sale-subtotal').textContent =
+                    Number(data.subtotal || 0).toFixed(2);
+
+                document.getElementById('sale-iva').textContent =
+                    Number(data.iva || 0).toFixed(2);
+
+                totalEl.textContent =
+                    Number(data.total || 0).toFixed(2);
                 dateEl.textContent = `Fecha: ${data.date}`;
 
                 // abrir modal

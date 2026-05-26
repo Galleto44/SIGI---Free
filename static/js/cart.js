@@ -94,12 +94,17 @@ function updateCartSummary() {
         const quantity = parseInt(quantityInput.value) || 0;
 
         items += quantity;
-
         total += value;
     });
 
+    const iva = total * 0.15;
+    const totalConIva = total + iva;
+
     document.getElementById("total-items").textContent = items;
     document.getElementById("total-amount").textContent = `$${total.toFixed(2)}`;
+
+    document.getElementById("iva-amount").textContent = `$${iva.toFixed(2)}`;
+
 }
 
 function renderOneRow() {

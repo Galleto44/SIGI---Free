@@ -39,6 +39,8 @@
                 <tr>
                     <th>#</th>
                     <th>Fecha</th>
+                    <th class="text-center">Subtotal</th>
+                    <th class="text-center">IVA</th>
                     <th class="text-center">Total</th>
                     <th class="text-center">Acciones</th>
                 </tr>
@@ -47,12 +49,23 @@
                 {% for sale in sales %}
                 <tr class="hover">
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ sale.date|date:"d/m/Y" }}</td>
+
+                    <td>
+                        {{ sale.date|date:"d/m/Y" }}
+                    </td>
+
                     <td class="text-center font-medium">
+                        $ {{ sale.subtotal }}
+                    </td>
+
+                    <td class="text-center font-medium text-green-600">
+                        $ {{ sale.iva }}
+                    </td>
+
+                    <td class="text-center font-semibold">
                         $ {{ sale.total }}
                     </td>
 
-                    <!-- Acciones -->
                     <td class="text-center">
                         <div class="flex justify-center gap-2">
 
@@ -117,9 +130,24 @@
             </table>
         </div>
 
-        <div class="mt-4 text-right">
+        <div class="mt-4 text-right space-y-1">
+            <p class="text-sm">
+                Subtotal:
+                <span class="font-medium">
+                    $<span id="sale-subtotal"></span>
+                </span>
+            </p>
+
+            <p class="text-sm text-green-600">
+                IVA:
+                <span class="font-medium">
+                    $<span id="sale-iva"></span>
+                </span>
+            </p>
+
             <p class="text-lg font-semibold">
-                Total: $<span id="sale-total"></span>
+                Total:
+                $<span id="sale-total"></span>
             </p>
         </div>
 

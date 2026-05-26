@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db import transaction
@@ -7,7 +8,6 @@ from functools import wraps
 
 from products.models import Product
 from .models import Sale, SaleDetail
-
 
 # =========================
 # HELPERS DE ROLES
@@ -84,7 +84,7 @@ def create_sale_page(request):
 # =========================
 
 @login_required
-@role_required("seller")
+@role_required("administrator", "seller")
 def create_sale(request):
 
     if request.method != 'POST':
@@ -97,13 +97,19 @@ def create_sale(request):
         if not items:
             return JsonResponse({'error': 'Carrito vacío'}, status=400)
 
-        total = 0
+        subtotal = Decimal("0.00")
+        IVA_PERCENT = Decimal("0.15")
 
         with transaction.atomic():
 
-            sale = Sale.objects.create(total=0)
+            sale = Sale.objects.create(
+                subtotal=0,
+                iva=0,
+                total=0
+            )
 
             for item in items:
+
                 product_id = item.get('product_id')
                 quantity = int(item.get('quantity', 0))
 
@@ -119,31 +125,46 @@ def create_sale(request):
                     raise Exception("Producto no encontrado")
 
                 if product.stock < quantity:
-                    raise Exception(f"Stock insuficiente para {product.name}")
+                    raise Exception(
+                        f"Stock insuficiente para {product.name}"
+                    )
 
-                price = product.price
-                subtotal = price * quantity
+                price = Decimal(str(product.price))
+                quantity = Decimal(quantity)
+
+                item_subtotal = price * quantity
 
                 SaleDetail.objects.create(
                     sale=sale,
                     product=product,
                     quantity=quantity,
                     price=price,
-                    subtotal=subtotal
+                    subtotal=item_subtotal
                 )
 
+                # descontar stock
                 product.stock -= quantity
                 product.save()
 
-                total += subtotal
+                subtotal += Decimal(item_subtotal)
 
+            iva = subtotal * IVA_PERCENT
+            total = subtotal + iva
+
+            sale.subtotal = subtotal
+            sale.iva = iva
             sale.total = total
+
             sale.save()
 
-        return JsonResponse({'success': True})
+        return JsonResponse({
+            'success': True
+        })
 
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400)
+        return JsonResponse({
+            'error': str(e)
+        }, status=400)
 
 
 # =========================
@@ -174,6 +195,8 @@ def get_sale_detail(request, sale_id):
         return JsonResponse({
             'id': sale.id,
             'date': sale.date.strftime("%d/%m/%Y"),
+            'subtotal': float(sale.subtotal),
+            'iva': float(sale.iva),
             'total': float(sale.total),
             'items': items
         })

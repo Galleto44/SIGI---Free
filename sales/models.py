@@ -4,7 +4,25 @@ from products.models import Product, Category
 # Create your models here.
 class Sale(models.Model):
     date = models.DateTimeField(auto_now_add=True)
-    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    subtotal = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    iva = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    total = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
