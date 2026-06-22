@@ -4,12 +4,65 @@
 
 {% block content %}
 
-<div class="text-center space-y-10">
-    <h1 class="text-5xl font-bold drop-shadow-lg">
-        SIGI
-    </h1>
+<div class="max-w-6xl mx-auto my-12">
+    <div class="text-center">
+
+        <h1 class="text-5xl font-bold drop-shadow-lg mb-10">
+            SIGI
+        </h1>
+
+        <!-- KPIS -->
+        <div class="flex flex-wrap justify-between gap-4">
+
+            <!-- Ventas del Mes -->
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 w-[23%] text-left">
+                <p class="text-sm text-gray-500 mb-2">
+                    Ventas del Mes
+                </p>
+
+                <h2 class="text-2xl font-bold">
+                    $ {{ monthly_sales }}
+                </h2>
+            </div>
+
+            <!-- Ventas Hoy -->
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 w-[23%] text-left">
+                <p class="text-sm text-gray-500 mb-2">
+                    Ventas Hoy
+                </p>
+
+                <h2 class="text-2xl font-bold">
+                    $ {{ today_sales }}
+                </h2>
+            </div>
+
+            <!-- Producto Más Vendido -->
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 w-[23%] text-left">
+                <p class="text-sm text-gray-500 mb-2">
+                    Producto Más Vendido
+                </p>
+
+                <h2 class="text-lg font-bold truncate">
+                    {{ top_product.product__name|default:"Sin ventas" }}
+                </h2>
+            </div>
+
+            <!-- Categoría Más Vendida -->
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-5 w-[23%] text-left">
+                <p class="text-sm text-gray-500 mb-2">
+                    Categoría Más Vendida
+                </p>
+
+                <h2 class="text-lg font-bold truncate">
+                    {{ top_category.product__category__name|default:"Sin ventas" }}
+                </h2>
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
-{% include "productsTable.html" %}
+
 
 {% endblock %}
