@@ -53,6 +53,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 totalEl.textContent = data.total.toFixed(2);
                 dateEl.textContent = `Fecha: ${data.date}`;
 
+                const noteEl = document.getElementById("sale-note");
+
+                noteEl.textContent = data.notes
+                    ? `Observaciones: ${data.notes}`
+                    : "Sin observaciones";
+
                 // abrir modal
                 detailModal.showModal();
 

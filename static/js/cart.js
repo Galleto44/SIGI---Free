@@ -295,6 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (isSubmitting) return;
 
         const items = buildCartPayload();
+        const notes = document.getElementById("sale-notes").value.trim();
 
         if (items.length === 0) {
             showAlert("Debes añadir al menos un producto");
@@ -310,7 +311,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json",
                     "X-CSRFToken": getCSRFToken()
                 },
-                body: JSON.stringify({ items })
+                body: JSON.stringify({
+                    notes: notes,
+                    items: items
+                })
             });
 
             const data = await response.json();

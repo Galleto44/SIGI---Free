@@ -39,6 +39,7 @@
                 <tr>
                     <th>#</th>
                     <th>Fecha</th>
+                    <th>Observaciones</th>
                     <th class="text-center">Total</th>
                     <th class="text-center">Acciones</th>
                 </tr>
@@ -48,6 +49,10 @@
                 <tr class="hover">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ sale.date|date:"d/m/Y" }}</td>
+
+                    <td class="max-w-xs truncate">
+                        {{ sale.notes|default:"-" }}
+                    </td>
                     <td class="text-center font-medium">
                         $ {{ sale.total }}
                     </td>
@@ -81,7 +86,7 @@
 
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center text-base-content/60 py-6">
+                    <td colspan="6" class="text-center text-base-content/60 py-6">
                         No hay ventas registradas
                     </td>
                 </tr>
@@ -100,6 +105,10 @@
         </h3>
 
         <p id="sale-date" class="text-sm text-gray-500 mb-4"></p>
+
+        <p id="sale-notes"
+            class="text-sm text-gray-500 italic mb-4">
+        </p>
 
         <div class="overflow-x-auto">
             <table class="table w-full text-sm">

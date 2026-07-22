@@ -1,11 +1,52 @@
 from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.db.models import Sum, Count
 from django.core.exceptions import ValidationError
 from .models import Category, Product
+from sales.models import Sale, SaleDetail
 
 # Create your views here.
 def home(request):
+    today = timezone.now().date()
+
+    monthly_sales = (
+        Sale.objects.filter(
+            is_active=True,
+            date__year=today.year,
+            date__month=today.month
+        ).aggregate(total=Sum("total"))["total"] or 0
+    )
+
+    today_sales = (
+        Sale.objects.filter(
+            is_active=True,
+            date__date=today
+        ).aggregate(total=Sum("total"))["total"] or 0
+    )
+
+    top_product = (
+        SaleDetail.objects.filter(sale__is_active=True)
+        .values("product__name")
+        .annotate(total_quantity=Sum("quantity"))
+        .order_by("-total_quantity")
+        .first()
+    )
+
+    top_category = (
+        SaleDetail.objects.filter(sale__is_active=True)
+        .values("product__category__name")
+        .annotate(total_quantity=Sum("quantity"))
+        .order_by("-total_quantity")
+        .first()
+    )
+
     products = Product.objects.all()
-    return render(request, 'home.html', {'products': products})
+    return render(request, "home.html", {
+        "monthly_sales": monthly_sales,
+        "today_sales": today_sales,
+        "top_product": top_product,
+        "top_category": top_category,
+    })
 
 def category(request):
 

@@ -37,6 +37,7 @@ def create_sale(request):
     try:
         data = json.loads(request.body)
         items = data.get('items', [])
+        notes = data.get('notes', '').strip()
 
         if not items:
             return JsonResponse({'error': 'Carrito vacío'}, status=400)
@@ -45,7 +46,10 @@ def create_sale(request):
 
         with transaction.atomic():
 
-            sale = Sale.objects.create(total=0)
+            sale = Sale.objects.create(
+                total=0,
+                notes=notes
+            )
 
             for item in items:
                 product_id = item.get('product_id')
@@ -54,9 +58,12 @@ def create_sale(request):
                 if quantity <= 0:
                     raise Exception("Cantidad inválida")
 
-                product = Product.objects.filter(id=product_id, is_active=True).first()
+                product = Product.objects.filter(
+                    id=product_id,
+                    is_active=True
+                ).first()
 
-                if not product:
+                if product is None:
                     raise Exception("Producto no encontrado")
 
                 if product.stock < quantity:
@@ -107,6 +114,7 @@ def get_sale_detail(request, sale_id):
         return JsonResponse({
             'id': sale.id,
             'date': sale.date.strftime("%d/%m/%Y"),
+            'notes': sale.notes,
             'total': float(sale.total),
             'items': items
         })
