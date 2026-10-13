@@ -44,15 +44,32 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 5. Configurar Tailwind CSS
-Instala las dependencias de Node.js necesarias para el diseño:
-```bash
-python manage.py tailwind install
-```
-*Nota: Si estás en Mac/Linux y el comando falla, asegúrate de que `NPM_BIN_PATH` en `settings.py` apunte a `"npm"` en lugar de `"npm.cmd"`.*
+### 5. Instalar y compilar Tailwind CSS
 
-### 6. Configurar la Base de Datos
-Crea la estructura de la base de datos local (SQLite):
+```bash
+Entra en la carpeta donde se encuentra el package.json de Tailwind:
+
+cd theme/static_src
+
+Instala las dependencias registradas en package-lock.json:
+
+npm ci
+
+Este comando instala las dependencias del frontend declaradas en package.json, incluidas Tailwind CSS, DaisyUI y @fontsource/inter, siempre que estén registradas correctamente en el archivo de bloqueo.
+
+A continuación, genera el CSS de producción:
+
+npm run build
+
+La compilación debe generar este archivo:
+
+theme/static/css/dist/styles.css
+
+Después de la compilación, regresa a la raíz del proyecto:
+
+cd ../..
+```
+### 6. Configurar la Base de Datos. Crea la estructura de la base de datos local (SQLite):
 ```bash
 python manage.py migrate
 ```
