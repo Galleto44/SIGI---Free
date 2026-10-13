@@ -939,6 +939,9 @@
   .pointer-events-none {
     pointer-events: none;
   }
+  .visible {
+    visibility: visible;
+  }
   @layer daisyui.l1.l2.l3 {
     .list {
       display: flex;
