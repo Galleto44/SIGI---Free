@@ -29,10 +29,10 @@ function getProductById(productId) {
 
 function createProductSelect() {
     return `
-        <div class="product-combobox relative w-96">
+        <div class="product-combobox relative w-full">
             <input
                 type="text"
-                class="product-search input input-bordered w-full pr-10"
+                class="product-search input input-bordered w-full"
                 placeholder="Buscar producto..."
                 autocomplete="off"
                 role="combobox"
@@ -50,8 +50,8 @@ function createProductSelect() {
 
             <div
                 class="product-options hidden absolute left-0 top-full mt-1
-                       w-full max-h-60 overflow-y-auto rounded-box
-                       border border-base-300 bg-base-100 shadow-lg z-50"
+                    w-full max-h-52 overflow-y-auto rounded-box
+                    border border-base-300 bg-base-100 shadow-lg z-50"
                 role="listbox"
             ></div>
 
@@ -64,6 +64,7 @@ function createProductSelect() {
         </div>
     `;
 }
+
 
 function renderProductDropdown(select) {
     const wrapper = select.closest(".product-combobox");
@@ -89,12 +90,21 @@ function renderProductDropdown(select) {
 
         button.type = "button";
         button.className =
-            "block w-full text-left px-3 py-2 text-sm " +
+            "block w-full text-left px-3 py-2 text-xs " +
             "hover:bg-base-200 disabled:opacity-40 " +
             "disabled:cursor-not-allowed";
 
-        button.textContent = product.name;
+        button.innerHTML = `
+            <div class="font-semibold text-xs">
+                ${product.name}
+            </div>
+            <div class="mt-1 text-[11px] leading-snug text-base-content/60 whitespace-normal break-words">
+                ${product.description || "Sin descripción"}
+            </div>
+        `;
+
         button.disabled = !option || option.disabled;
+
         button.setAttribute("role", "option");
         button.setAttribute(
             "aria-selected",
@@ -122,7 +132,7 @@ function renderProductDropdown(select) {
         const emptyMessage = document.createElement("p");
 
         emptyMessage.className =
-            "px-3 py-2 text-sm text-gray-500";
+            "px-3 py-3 text-sm text-gray-500";
 
         emptyMessage.textContent = "No se encontraron productos";
 
@@ -134,6 +144,7 @@ function renderProductDropdown(select) {
     dropdown.classList.toggle("hidden", !isOpen);
     input.setAttribute("aria-expanded", String(isOpen));
 }
+
 
 function setKeyboardActiveOption(wrapper, options, index) {
     options.forEach(option => {
@@ -220,8 +231,10 @@ function renderOneRow() {
     row.innerHTML = `
         <td>${rowCount}</td>
 
-        <td>
+        <td class="min-w-56">
             ${createProductSelect()}
+            <!--<div class="product-description mt-1 text-xs text-base-content/60 whitespace-normal">
+            </div>-->
         </td>
 
         <td>
@@ -358,6 +371,11 @@ function renderOneRow() {
     select.addEventListener("change", () => {
 
         const product = getProductById(select.value);
+        const descriptionCell = row.querySelector(".product-description");
+
+        descriptionCell.textContent = product
+            ? (product.description || "Sin descripción")
+            : "";
 
         searchInput.value = product ? product.name : "";
 

@@ -21,7 +21,8 @@ def create_sale_page(request):
             "id": p.id,
             "name": p.name,
             "price": float(p.price),
-            "stock": p.stock
+            "stock": p.stock,
+            "description": p.description or ""
         }
         for p in products
     ])
