@@ -233,8 +233,6 @@ function renderOneRow() {
 
         <td class="min-w-56">
             ${createProductSelect()}
-            <!--<div class="product-description mt-1 text-xs text-base-content/60 whitespace-normal">
-            </div>-->
         </td>
 
         <td>
@@ -367,19 +365,15 @@ function renderOneRow() {
     const priceCell = row.querySelector(".price");
     const subtotalCell = row.querySelector(".subtotal");
 
+    console.log("Celdas:", priceCell, subtotalCell);
+
     // selecciona producto
     select.addEventListener("change", () => {
-
         const product = getProductById(select.value);
-        const descriptionCell = row.querySelector(".product-description");
-
-        descriptionCell.textContent = product
-            ? (product.description || "Sin descripción")
-            : "";
 
         searchInput.value = product ? product.name : "";
 
-        // Caso 1: vuelve a "Selecciona un producto"
+        // Si no se seleccionó ningún producto.
         if (!product) {
             quantityInput.value = 1;
             priceCell.textContent = "$0.00";
@@ -390,10 +384,10 @@ function renderOneRow() {
             return;
         }
 
-        // Caso 2: selecciona un producto válido
-        quantityInput.value = 1; // reset cantidad SIEMPRE
+        // Producto seleccionado.
+        quantityInput.value = 1;
 
-        const price = product.price;
+        const price = Number(product.price);
         const quantity = 1;
 
         priceCell.textContent = `$${price.toFixed(2)}`;
