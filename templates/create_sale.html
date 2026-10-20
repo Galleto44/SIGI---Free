@@ -146,8 +146,19 @@
 
 <dialog id="alertModal" class="modal">
     <div class="modal-box">
-        <h3 class="text-center font-semibold text-lg">
-            Atención
+
+        <!-- Icono dinámico con doble círculo -->
+        <div id="alertIcon"
+             class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+
+            <span class="flex h-16 w-16 items-center justify-center rounded-full bg-green-500">
+                <i data-lucide="check" class="h-8 w-8 text-white"></i>
+            </span>
+
+        </div>
+
+        <h3 id="alertTitle" class="text-center font-semibold text-lg">
+            Operación exitosa
         </h3>
 
         <p id="alertMessage" class="text-center py-2 text-sm text-gray-600">
@@ -161,6 +172,7 @@
                 </button>
             </form>
         </div>
+
     </div>
 </dialog>
 

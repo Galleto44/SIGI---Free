@@ -463,19 +463,45 @@ function buildCartPayload() {
     return items;
 }
 
-function showAlert(message) {
+function showAlert(message, type = "error") {
     const modal = document.getElementById("alertModal");
-    const messageEl = document.getElementById("alertMessage");
+    const alertMessage = document.getElementById("alertMessage");
+    const alertTitle = document.getElementById("alertTitle");
+    const alertIcon = document.getElementById("alertIcon");
 
-    if (!modal || !messageEl) {
-        console.warn(message);
-        return;
+    alertMessage.textContent = message;
+
+    if (type === "success") {
+        alertTitle.textContent = "Operación exitosa";
+
+        alertIcon.className =
+            "mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100";
+
+        alertIcon.innerHTML = `
+            <span class="flex h-16 w-16 items-center justify-center rounded-full bg-green-500">
+                <i data-lucide="check" class="h-8 w-8 text-white"></i>
+            </span>
+        `;
+    } else {
+        alertTitle.textContent = "Ha ocurrido un error";
+
+        alertIcon.className =
+            "mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-red-100";
+
+        alertIcon.innerHTML = `
+            <span class="flex h-16 w-16 items-center justify-center rounded-full bg-red-500">
+                <i data-lucide="x" class="h-8 w-8 text-white"></i>
+            </span>
+        `;
     }
 
-    if (modal.open) modal.close();
+    if (window.lucide) {
+        lucide.createIcons();
+    }
 
-    messageEl.textContent = message;
-    modal.showModal();
+    if (!modal.open) {
+        modal.showModal();
+    }
 }
 
 function getCSRFToken() {
@@ -544,7 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (response.ok) {
-                showAlert("Venta registrada correctamente");
+                showAlert("Venta registrada correctamente", "success");
 
                 const modal = document.getElementById("alertModal");
 
@@ -553,7 +579,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, { once: true });
 
             } else {
-                showAlert(data.error || "Error al registrar la venta");
+                showAlert(data.error || "Error al registrar la venta", "error");
                 isSubmitting = false;
             }
 
