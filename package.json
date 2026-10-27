@@ -1,0 +1,55 @@
+
+{
+  "name": "sigi-free",
+  "version": "1.0.0",
+  "description": "Sistema gratuito de gestión de inventario y ventas para pequeños negocios",
+  "main": "electron/main.js",
+  "author": "Johnny Velásquez Lezama",
+  "license": "GPL-3.0-only",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Galleto44/SIGI---Free.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Galleto44/SIGI---Free/issues"
+  },
+  "homepage": "https://github.com/Galleto44/SIGI---Free#readme",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^44.9.2",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.sigifree.desktop",
+    "productName": "SIGI Free",
+    "copyright": "Copyright © 2026 Johnny Enrique Velásquez Lezama",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist/SIGIBackend",
+        "to": "backend"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

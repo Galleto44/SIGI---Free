@@ -1,22 +1,64 @@
-# Entorno Virtual
+
+# ==============================
+# Entorno virtual de Python
+# ==============================
 venv/
 .venv/
 env/
+
+# ==============================
+# Python
+# ==============================
 __pycache__/
-*.pyc
+*.py[cod]
+*.log
 
-# Base de Datos (Cada colaborador debe tener la suya local)
+# ==============================
+# Base de datos local
+# ==============================
 db.sqlite3
+db.sqlite3-journal
+db.sqlite3-shm
+db.sqlite3-wal
 
-# Node / Tailwind
+# ==============================
+# Node.js / Electron
+# ==============================
 node_modules/
-/**/node_modules/
-# Ignora el CSS compilado de Tailwind (se genera localmente)
+
+# ==============================
+# Tailwind CSS generado
+# ==============================
 theme/static/css/dist/
 
-# Configuraciones sensibles
+# ==============================
+# Configuración sensible
+# ==============================
 .env
+.env.*
 
-# Archivos de Sistema
+# ==============================
+# PyInstaller: archivos generados
+# ==============================
+/build/
+/dist/
+
+# Archivo spec generado por PyInstaller
+/SIGIBackend.spec
+
+# ==============================
+# Django: archivos estáticos recopilados
+# ==============================
+/staticfiles/
+
+# ==============================
+# Instaladores y compilaciones Electron
+# ==============================
+/release/
+
+# ==============================
+# Archivos del sistema operativo
+# ==============================
 .DS_Store
 Thumbs.db
+Desktop.ini

@@ -7,19 +7,21 @@
     <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
     <title>{% block title %}SIGI{% endblock %}</title>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen">
-    <div class="flex w-full">
-
+<body class="min-h-screen bg-gray-100 font-sans">
+    <div class="flex min-h-screen w-full">
         {% include "sidebar.html" %}
 
-        <main class="flex-1 m-0 p-0">
-            {% block content %}
-            {% endblock %}
-        </main>
+        <main class="flex min-h-screen min-w-0 flex-1 flex-col">
+            <div class="flex-1">
+                {% block content %}{% endblock %}
+            </div>
 
+            {% include "footer.html" %}
+        </main>
     </div>
-<script src="{% static 'js/chart.bundle.js' %}" defer></script>
-<script src="https://unpkg.com/lucide@latest" defer></script>
-<script src="{% static 'js/main.js' %}" defer></script>
+
+    <script src="{% static 'js/chart.bundle.js' %}" defer></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="{% static 'js/main.js' %}" defer></script>
 </body>
 </html>
